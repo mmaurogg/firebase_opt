@@ -24,8 +24,57 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(F.title)),
-      body: isAuthenticated ? AuthView(authService: _authService) : HomeView(),
+      body: Column(
+        children: [
+          Center(
+            child: Text(
+              'Bienvenido a la aplicación',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (!isAuthenticated) ...[
+            ElevatedButton(
+              onPressed: () async {
+                await _login();
+                setState(() {});
+              },
+              child: const Text('Iniciar sesión'),
+            ),
+          ] else
+            ElevatedButton(
+              onPressed: () async {
+                await _logout();
+                setState(() {});
+              },
+              child: const Text('Cerrar sesión'),
+            ),
+
+          const SizedBox(height: 16),
+
+          Text('Usuario autenticado: ${_authService.currentUser?.email}'),
+        ],
+      ),
     );
+  }
+
+  Future<void> _login() async {
+    final email = 'user@example.com';
+    final password = 'abc123';
+
+    await _authService
+        .signInWithEmailAndPassword(email, password)
+        .then((user) {
+          print('Usuario autenticado: ${user!.email}');
+        })
+        .catchError((error) {
+          print('Error al autenticar: $error');
+        });
+  }
+
+  Future<void> _logout() async {
+    await _authService.signOut();
+    print('Usuario desconectado');
   }
 }
 
