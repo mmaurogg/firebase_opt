@@ -5,6 +5,8 @@ class AuthService {
 
   User? get currentUser => _auth.currentUser;
 
+  bool get isAuthenticated => currentUser != null;
+
   Future<User?> signInWithEmailAndPassword(
     String email,
     String password,

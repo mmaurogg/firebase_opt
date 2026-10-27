@@ -1,15 +1,16 @@
+import 'package:firebase_otp/config/flavors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
   ThemeData getTheme() => ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.deepPurple,
-      primary: Colors.deepPurple,
+      seedColor: F.color,
+      primary: F.color,
       error: Colors.red,
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.deepPurple,
+    appBarTheme: AppBarTheme(
+      backgroundColor: F.color,
       foregroundColor: Colors.white,
     ),
   );

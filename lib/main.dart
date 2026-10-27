@@ -14,5 +14,7 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
 
+  await F().setBrandFromRemoteConfig();
+
   runApp(const App());
 }
