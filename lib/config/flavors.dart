@@ -25,9 +25,11 @@ class F {
     final remoteConfigService = RemoteConfigService();
     await remoteConfigService.initialize();
 
+    final appColor = remoteConfigService.appColor;
+
+    final test = remoteConfigService.test;
+
     image = remoteConfigService.imageUrl;
-    color = Color(
-      int.parse(remoteConfigService.appColor.replaceFirst('#', '0xff')),
-    );
+    color = Color(int.parse(appColor.replaceFirst('#', '0xff')));
   }
 }

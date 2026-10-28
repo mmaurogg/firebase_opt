@@ -64,6 +64,6 @@ class DefaultFirebaseOptions {
     projectId: 'app-firebase-cc666',
     databaseURL: 'https://app-firebase-cc666-default-rtdb.firebaseio.com',
     storageBucket: 'app-firebase-cc666.firebasestorage.app',
-    iosBundleId: 'com.example.banana',
+    //iosBundleId: 'com.example.banana',
   );
 }

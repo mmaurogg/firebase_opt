@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_otp/data/firebase/auth_service.dart';
+import 'package:firebase_otp/data/firebase/firestore_service.dart';
+import 'package:firebase_otp/data/firebase/real_time_db_service.dart';
 import 'package:firebase_otp/pages/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import '../config/flavors.dart';
@@ -12,15 +15,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late AuthService _authService;
+  late RealTimeDbService _realTimeDbService;
+  late FirestoreService _firestore;
+
+  bool isLoading = false;
 
   @override
   initState() {
     super.initState();
     _authService = AuthService();
+    _realTimeDbService = RealTimeDbService();
+    _firestore = FirestoreService();
   }
 
   @override
   Widget build(BuildContext context) {
+    final welcomeMessage = _authService.isAuthenticated
+        ? 'Bienvenido ${_authService.currentUser?.email}'
+        : 'Usuario no autenticado';
     return Scaffold(
       appBar: AppBar(
         title: Text(F.title),
@@ -40,35 +52,71 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: [
           if (_authService.isAuthenticated)
-            IconButton(icon: const Icon(Icons.logout), onPressed: _logout)
+            CircleAvatar(
+              child: IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: _logout,
+              ),
+            )
           else
             ElevatedButton.icon(
               icon: const Icon(Icons.login),
               onPressed: _login,
               label: const Text('login'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
             ),
         ],
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Text(
-              'Bienvenido a la aplicación',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(title: Text(welcomeMessage)),
+            backgroundColor: F.color.withAlpha(80),
           ),
 
-          const SizedBox(height: 16),
+          StreamBuilder(
+            stream: _firestore.getProducts(),
+            builder: (context, asyncSnapshot) {
+              if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+                return const SliverToBoxAdapter(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (asyncSnapshot.hasError) {
+                final error = asyncSnapshot.error;
+                return SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(child: Text('Error: $error')),
+                  ),
+                );
+              }
 
-          Text('Usuario autenticado: ${_authService.currentUser?.email}'),
+              final products = asyncSnapshot.data ?? [];
 
-          const SizedBox(height: 16),
+              return SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final product = products[index];
 
-          ProductCard(
-            imageUrl: 'https://via.placeholder.com/150',
-            title: 'Producto 1',
-            description: 'Descripción del producto 1',
-            price: 19.99,
+                  return StreamBuilder<int?>(
+                    stream: _realTimeDbService.getStock(product.id),
+                    builder: (context, asyncSnapshot) {
+                      final stock = asyncSnapshot.data?.toString();
+                      return ProductCard(
+                        title: product.name,
+                        price: product.price,
+                        stock: stock,
+                        imageUrl: product.imageUrl,
+                      );
+                    },
+                  );
+                }, childCount: products.length),
+              );
+            },
           ),
         ],
       ),
@@ -83,12 +131,17 @@ class _MyHomePageState extends State<MyHomePage> {
         .signInWithEmailAndPassword(email, password)
         .then((user) {
           print('Usuario autenticado: ${user!.email}');
+          setState(() {
+            isLoading = true;
+          });
         })
         .catchError((error) {
           print('Error al autenticar: $error');
         });
 
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> _logout() async {

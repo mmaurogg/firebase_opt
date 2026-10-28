@@ -23,5 +23,6 @@ class RemoteConfigService {
   bool get maintenanceMode => _remoteConfig.getBool('maintenance_mode');
   String get appColor => _remoteConfig.getString('app_color');
   String get welcomeMessage => _remoteConfig.getString('welcome_message');
+  String get test => _remoteConfig.getString('test');
   String get imageUrl => _remoteConfig.getString('image_url');
 }
