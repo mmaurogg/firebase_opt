@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_otp/data/firebase/auth_service.dart';
 import 'package:firebase_otp/data/firebase/firestore_service.dart';
 import 'package:firebase_otp/data/firebase/real_time_db_service.dart';
@@ -143,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     await _authService
         .signInWithEmailAndPassword(email, password)
-        .then((user) {
+        .then((user) async {
+          await _setClaim();
           print('Usuario autenticado: ${user!.email}');
         })
         .catchError((error) {
@@ -159,5 +161,20 @@ class _MyHomePageState extends State<MyHomePage> {
     await _authService.signOut();
     print('Usuario desconectado');
     setState(() {});
+  }
+
+  Future<void> _setClaim() async {
+    try {
+      final callable = FirebaseFunctions.instance.httpsCallable(
+        'setAppIdClaim',
+      );
+      await callable.call({'appId': F.name});
+
+      final user = _authService.currentUser;
+      final userResult = await user!.getIdTokenResult(true);
+      print('AppId: ${userResult.claims}');
+    } catch (e) {
+      print('Error al establecer el appId: $e');
+    }
   }
 }

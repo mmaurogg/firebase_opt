@@ -1,1 +1,47 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"fir-services-65893","appId":"1:769851762612:android:b70b36f5bc57f37a3a74e1","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"fir-services-65893","configurations":{"android":"1:769851762612:android:b70b36f5bc57f37a3a74e1","ios":"1:769851762612:ios:b419a6343850f80e3a74e1"}}},"ios":{"default":{"projectId":"fir-services-65893","appId":"1:769851762612:ios:b419a6343850f80e3a74e1","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fir-services-65893",
+          "appId": "1:769851762612:android:b70b36f5bc57f37a3a74e1",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fir-services-65893",
+          "configurations": {
+            "android": "1:769851762612:android:b70b36f5bc57f37a3a74e1",
+            "ios": "1:769851762612:ios:b419a6343850f80e3a74e1"
+          }
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "fir-services-65893",
+          "appId": "1:769851762612:ios:b419a6343850f80e3a74e1",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "source": "functions",
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ]
+}

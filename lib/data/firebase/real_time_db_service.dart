@@ -17,13 +17,4 @@ class RealTimeDbService {
       }
     });
   }
-
-  Future<void> decrementStock(String productId) async {
-    final productRef = _dbRef.child('stock/$productId');
-    await productRef.runTransaction((currentValue) {
-      final current = (currentValue as int?) ?? 0;
-      if (current <= 0) return Transaction.abort();
-      return Transaction.success(current - 1);
-    });
-  }
 }
