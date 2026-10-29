@@ -1,7 +1,8 @@
+import 'package:firebase_otp/config/app_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'flavors.dart';
+import 'config/flavors.dart';
 import 'pages/my_home_page.dart';
 
 class App extends StatelessWidget {
@@ -11,7 +12,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: F.title,
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: AppTheme().getTheme(),
       home: _flavorBanner(child: MyHomePage(), show: kDebugMode),
     );
   }
