@@ -1,32 +1,32 @@
 class Product {
   final String id;
-  final String? appid;
+  final List<String?> appId;
   final String name;
   final double price;
   final String? imageUrl;
 
-  Product(
-    this.appid,
-    this.imageUrl, {
+  Product({
     required this.id,
+    required this.appId,
     required this.name,
     required this.price,
+    this.imageUrl,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      json['appId'] as String?,
-      json['imageUrl'] as String?,
       id: json['id'] as String,
+      appId: json['appId'] != null ? List<String>.from(json['appId']) : [],
       name: json['name'] as String,
       price: (json['price'] as num).toDouble(),
+      imageUrl: json['imageUrl'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'appId': appid,
+      'appId': appId,
       'name': name,
       'price': price,
       'imageUrl': imageUrl,

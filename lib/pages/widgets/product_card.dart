@@ -5,12 +5,14 @@ class ProductCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.price,
-    required this.imageUrl,
+    required this.onTap,
+    this.imageUrl,
     this.stock,
   });
 
   final String title;
   final double price;
+  final VoidCallback onTap;
   final String? imageUrl;
   final String? stock;
 
@@ -30,6 +32,7 @@ class ProductCard extends StatelessWidget {
             title: Text(title),
             subtitle: Text('\$${price.toStringAsFixed(2)}'),
             trailing: Text(stockText),
+            onTap: onTap,
           )
         : Padding(
             padding: const EdgeInsets.all(12.0),

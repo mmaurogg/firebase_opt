@@ -10,7 +10,7 @@ class FirestoreService {
 
     return _firestore
         .collection('products')
-        .where('appId', isEqualTo: appId)
+        .where('appId', arrayContainsAny: [appId])
         .snapshots()
         .map((snapshot) {
           final stream = snapshot.docs.where((e) => e.data().isNotEmpty).map((

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_otp/data/firebase/auth_service.dart';
 import 'package:firebase_otp/data/firebase/firestore_service.dart';
 import 'package:firebase_otp/data/firebase/real_time_db_service.dart';
@@ -51,7 +50,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         actions: [
-          if (_authService.isAuthenticated)
+          if (isLoading)
+            CircleAvatar(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ),
+            )
+          else if (_authService.isAuthenticated)
             CircleAvatar(
               child: IconButton(
                 icon: const Icon(Icons.logout),
@@ -105,12 +111,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   return StreamBuilder<int?>(
                     stream: _realTimeDbService.getStock(product.id),
                     builder: (context, asyncSnapshot) {
-                      final stock = asyncSnapshot.data?.toString();
                       return ProductCard(
                         title: product.name,
                         price: product.price,
-                        stock: stock,
                         imageUrl: product.imageUrl,
+                        stock: asyncSnapshot.data?.toString(),
+                        onTap: () {
+                          _firestore.placeOrder(
+                            productId: product.id,
+                            quantity: 1,
+                          );
+                        },
                       );
                     },
                   );
@@ -126,14 +137,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _login() async {
     final email = 'user@example.com';
     final password = 'abc123';
+    setState(() {
+      isLoading = true;
+    });
 
     await _authService
         .signInWithEmailAndPassword(email, password)
         .then((user) {
           print('Usuario autenticado: ${user!.email}');
-          setState(() {
-            isLoading = true;
-          });
         })
         .catchError((error) {
           print('Error al autenticar: $error');

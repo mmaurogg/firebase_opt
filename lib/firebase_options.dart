@@ -50,20 +50,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBv2AbUsUblCynD4MYWr5hZppk1JgxgjOI',
-    appId: '1:419577351245:android:2d145a1741afff2613a004',
-    messagingSenderId: '419577351245',
-    projectId: 'app-firebase-cc666',
-    databaseURL: 'https://app-firebase-cc666-default-rtdb.firebaseio.com',
-    storageBucket: 'app-firebase-cc666.firebasestorage.app',
+    apiKey: 'AIzaSyBiPf0UqqaNYM-OqyX9LXjwiUIm-r_qhGE',
+    appId: '1:769851762612:android:b70b36f5bc57f37a3a74e1',
+    messagingSenderId: '769851762612',
+    projectId: 'fir-services-65893',
+    storageBucket: 'fir-services-65893.firebasestorage.app',
   );
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDKc048KWfTpPlOfM45aLSnWKshupyg1rU',
-    appId: '1:419577351245:ios:069718d7847c2c1b13a004',
-    messagingSenderId: '419577351245',
-    projectId: 'app-firebase-cc666',
-    databaseURL: 'https://app-firebase-cc666-default-rtdb.firebaseio.com',
-    storageBucket: 'app-firebase-cc666.firebasestorage.app',
-    //iosBundleId: 'com.example.banana',
+    apiKey: 'AIzaSyDuLVKhWMa6MKpKpMK8pm3bV3XUH-tE-VM',
+    appId: '1:769851762612:ios:b419a6343850f80e3a74e1',
+    messagingSenderId: '769851762612',
+    projectId: 'fir-services-65893',
+    storageBucket: 'fir-services-65893.firebasestorage.app',
+    iosBundleId: 'com.example.banana',
   );
 }
