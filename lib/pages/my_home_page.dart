@@ -136,14 +136,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    final email = 'user@example.com';
-    final password = 'abc123';
+    final selectedEmail = await _showUserSelectionDialog();
+    if (selectedEmail == null) return;
+
+    const password = 'abc123';
     setState(() {
       isLoading = true;
     });
 
     await _authService
-        .signInWithEmailAndPassword(email, password)
+        .signInWithEmailAndPassword(selectedEmail, password)
         .then((user) async {
           await _setClaim();
           print('Usuario autenticado: ${user!.email}');
@@ -155,6 +157,41 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<String?> _showUserSelectionDialog() async {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Seleccionar usuario'),
+          content: const Text('¿Con qué usuario deseas iniciar sesión?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop('user@example.com'),
+              child: const Text(
+                'user@example.com',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop('test@example.com'),
+              child: const Text(
+                'test@example.com',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(null),
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _logout() async {
